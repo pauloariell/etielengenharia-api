@@ -1,50 +1,40 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: "mail.diegopinho.com.br",
-  port: 25,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: "no-reply@diegopinho.com",
-    pass: "senhaqualquerdeteste"
-  },
-  tls: { rejectUnauthorized: false }
-});
+async function send(data, callback, error) {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.umbler.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD
+    }
+  });
+
+  let mailOptions = {
+    from: '"PACCode 👻" <paulo.chaves@paccode.com.br>', // sender address
+    to: data.emailto, // list of receivers
+    subject: data.text, // Subject line
+    html: "<b>Hello ETIEL Engenharia</b>" // html body
+  }
+
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    callback(info)
+  } catch (e) {
+    error(e)
+  }
+}
 
 module.exports = {
-  // async..await is not allowed in global scope, must use a wrapper
-  async sendMail(req,res) {
-    // Generate test SMTP service account from ethereal.email
-    // Only needed if you don't have a real mail account for testing
-    let testAccount = await nodemailer.createTestAccount();
-
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass // generated ethereal password
-      }
-    });
-
-    // send mail with defined transport object
-    let info = await transporter.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>', // sender address
-      to: `bar@example.com, baz@example.com, ${req.body.emailto}`, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: req.body.text, // plain text body
-      html: `"<b>Hello world?</b>"` // html body
-    });
-
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-    console.log(req.body.text);
-    return await res.json("Message sent: " + info.messageId);
+  async sendMail(req, res) {
+    send(req.body, info => {
+      console.log(`the mail has beed send :) and the id is ${info.messageId}`);
+      return res.send(info);
+    },
+    error => {
+      res.status(error.responseCode);
+      return res.send(error.response);
+    })
   }
 }
