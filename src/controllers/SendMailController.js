@@ -12,10 +12,10 @@ async function send(data, callback, error) {
   });
 
   let mailOptions = {
-    from: '"PACCode 👻" <paulo.chaves@paccode.com.br>', // sender address
+    from: `"PACCode 👻"<${process.env.EMAIL}>`, // sender address
     to: data.emailto, // list of receivers
-    subject: data.text, // Subject line
-    html: "<b>Hello ETIEL Engenharia</b>" // html body
+    subject: data.subject, // Subject line
+    html: `<b>${data.text}</b>` // html body
   }
 
   try {

@@ -16,4 +16,4 @@ function haltOnTimedout (req, res, next) {
   if (!req.timedout) next()
 }
 
-app.listen(3001);
+app.listen(process.env.PORT || 3001);
