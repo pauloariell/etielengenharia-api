@@ -3,7 +3,7 @@ const mailer = createMailer();
 
 module.exports = {
   async ContactUs(req, res) {
-    await mailer.sendMail(req.body, info => {
+    await mailer.contactUs(req.body, info => {
       //console.log(`the mail has beed send :) and the id is ${info.messageId}`);
       return res.send(info);
     },
