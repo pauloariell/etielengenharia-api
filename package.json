@@ -23,9 +23,11 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-handlebars": "^4.0.4",
     "mongoose": "^5.9.12",
     "mongoose-paginate": "^5.0.3",
     "nodemailer": "^6.4.6",
+    "nodemailer-express-handlebars": "^4.0.0",
     "require-dir": "^1.2.0"
   },
   "devDependencies": {
